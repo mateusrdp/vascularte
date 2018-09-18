@@ -42,7 +42,7 @@ export class DataService implements OnInit {
   loadPatientData(patientName: string) {
       this.apollo.query<PatientDataResponse>({ query: PATIENT_DATA, variables: {name: patientName} }).subscribe(result => {
       this._patient = result.data.patient[0];
-      this._patient.dob = new Date(result.data.patient[0].dob); //hack to get the date right
+      this._patient.dob = new Date(result.data.patient[0].dob); // hack to get the date right
         // The API is designed to do the search itself, but giving an exact match will only return one, unless two have the same name
         // TODO: handle the same name scenario
     }, error => {
@@ -69,6 +69,11 @@ export class DataService implements OnInit {
       origin: '',
       referredBy: '',
       obs: ''
-    }
+    };
   }
+
+  closePatient() {
+    this._patient = null;
+  }
+
 }

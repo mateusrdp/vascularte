@@ -1,42 +1,28 @@
-<!-- Login bar -->
-<div *ngIf="!isLogged" class="bg-secondary">
-	<form class="form-inline mr-sm-2">
-		<div class="input-group input-group-sm mx-auto">
-			<div class="input-group-prepend">
-				<fa-icon [icon]="['far', 'user-circle']" class="input-group-text"></fa-icon>
-			</div>
-			<input [(ngModel)]="login" id="login" type="text" class="form-control" name="login" placeholder="Login">
-			<div class="input-group-prepend input-group-append">
-				<fa-icon [icon]="['fas', 'key']" class="input-group-text"></fa-icon>
-			</div>
-			<input [(ngModel)]="password" id="password" type="password" class="form-control" name="password" placeholder="Password">
-			<div class="input-group-append">
-				<button class="btn btn-primary" (click)="confirm()">Log in</button>
-			</div>
+<mat-toolbar>
+		<!-- Login bar -->
+		<div *ngIf="!isLogged">
+      <mat-form-field>
+        <mat-icon>account_circle</mat-icon>
+			  <input matInput [(ngModel)]="login" type="text" name="login" placeholder="Login">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-icon>vpn_key</mat-icon>
+			  <input matInput [(ngModel)]="password" type="password" name="password" placeholder="Password">
+      </mat-form-field>
+			<button mat-mini-fab (click)="confirm()"><mat-icon>check_circle_outline</mat-icon></button>
 		</div>
-	</form>
-</div> 
-
-<div *ngIf="isLogged" class="bg-secondary fixed-top">
-	<!-- Search bar -->
-	<form class="form-inline mr-sm-2">
-		<div class="input-group input-group-sm mx-auto w-75">
-			<div class="input-group-prepend">
-				<fa-icon [icon]="['far', 'address-card']" class="input-group-text"></fa-icon>
-			</div>
-			<input	id="patientName" name="patientName" type="text" class="form-control" placeholder="Search..."
-					autocomplete="off"
-					[(ngModel)]="patientName" [typeahead]="allPatientNames" [typeaheadLatinize]="true"
-					(typeaheadOnSelect)="loadPatientData($event)"
-					>
+		<!--  Search bar -->
+		<div *ngIf="isLogged">
+      <mat-form-field>
+        <input matInput type="text" name="patientName" [matAutocomplete]="auto" placeholder="Search..."
+               [(ngModel)]="patientName">
+      </mat-form-field>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="loadPatientData($event.option.value)">
+        <mat-option *ngFor="let patientName of allPatientNames" [value]="patientName" >{{patientName}}</mat-option>
+      </mat-autocomplete>
+    <button mat-mini-fab (click)="logout()"><mat-icon>logout</mat-icon></button>
 		</div>
-	</form>
-	<!-- Session info / Logout bar -->
-	<div class="text-right fixed-bottom bg-secondary">
-		<strong *ngIf="hasDrData"> Logged as {{ doctor.name }} </strong>
-		<button class="btn btn-warning align-self-right" (click)="logout()">Logout</button>
-	</div>
-</div>
+</mat-toolbar>
 
 <div class='container'>
   <router-outlet></router-outlet>

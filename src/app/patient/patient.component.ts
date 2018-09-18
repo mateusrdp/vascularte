@@ -20,4 +20,7 @@ export class PatientComponent implements OnInit {
     this.data.newPatient();
   }
 
+  closePatient() {
+    this.data.closePatient();
+  }
 }

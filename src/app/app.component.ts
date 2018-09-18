@@ -5,7 +5,6 @@ import { IPatient } from './interfaces/ipatient';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { TypeaheadMatch } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +14,11 @@ import { TypeaheadMatch } from 'ngx-bootstrap';
 
 export class AppComponent implements OnInit {
   title = 'Vascularte';
-  private login: string;
-  private password: string;
+  login: string;
+  password: string;
   private _isLogged: boolean;
   private _hasDrData: boolean;
-  private patientName: string; 
+  patientName: string;
 
   constructor(
     private authService: AuthService,
@@ -68,13 +67,8 @@ export class AppComponent implements OnInit {
     return this.data.allPatientNames;
   }
 
-  loadPatientData(e: TypeaheadMatch) {
-    if (e) {
-      console.log(e.value);
-      this.data.loadPatientData(e.value);
-    } else {
-      console.log("New patient " + this.patientName);
-    }
+  loadPatientData(name: string) {
+    this.data.loadPatientData(name);
   }
   newPatient() {
     this.data.newPatient();

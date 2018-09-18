@@ -8,19 +8,24 @@ import { AuthService } from './auth/auth.service';
 import { RouterModule } from '@angular/router';
 import { PatientComponent } from './patient/patient.component';
 import { FormsModule } from '@angular/forms';
-
-import { TypeaheadModule, BsDatepickerModule } from 'ngx-bootstrap';
-import { TextareaAutosizeModule } from 'ngx-textarea-autosize';
-
-// Fontawesome stuff
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faAddressCard, faUserCircle, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
-import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { WelcomeComponent } from './welcome/welcome.component';
 
-library.add(faKey, faAddressCard, faUserCircle, faTimesCircle);
-// End Fontawesome stuff (+ import)
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  MatIconModule,
+  MatButtonModule,
+//          MatExpansionModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+//          MatTooltipModule,
+//          MatSnackBarModule,
+//          MatDialogModule,
+  MatSelectModule,
+  MatToolbarModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatAutocompleteModule, MAT_DATE_LOCALE,
+} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -30,6 +35,7 @@ library.add(faKey, faAddressCard, faUserCircle, faTimesCircle);
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     GraphQLModule,
     FormsModule,
     RouterModule.forRoot([
@@ -38,12 +44,23 @@ library.add(faKey, faAddressCard, faUserCircle, faTimesCircle);
       { path: '', redirectTo: '/welcome', pathMatch: 'full' },
       { path: '**', redirectTo: '/welcome', pathMatch: 'full' }
     ]),
-    TextareaAutosizeModule,
-    TypeaheadModule.forRoot(),
-    BsDatepickerModule.forRoot(),
-    FontAwesomeModule,
+
+    MatIconModule,
+    MatButtonModule,
+//    MatExpansionModule,
+//    MatExpansionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+//    MatTooltipModule,
+//    MatSnackBarModule,
+//    MatDialogModule,
+    MatSelectModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
   ],
-  providers: [AuthService],
+  providers: [AuthService, {provide: MAT_DATE_LOCALE, useValue: 'en-GB'}],
   bootstrap: [AppComponent]
 
 })
