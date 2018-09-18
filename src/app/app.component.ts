@@ -5,7 +5,6 @@ import { IPatient } from './interfaces/ipatient';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { TypeaheadMatch } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -68,13 +67,8 @@ export class AppComponent implements OnInit {
     return this.data.allPatientNames;
   }
 
-  loadPatientData(e: TypeaheadMatch) {
-    if (e) {
-      console.log(e.value);
-      this.data.loadPatientData(e.value);
-    } else {
-      console.log("New patient " + this.patientName);
-    }
+  loadPatientData() {
+      this.data.loadPatientData(this.patientName);
   }
   newPatient() {
     this.data.newPatient();

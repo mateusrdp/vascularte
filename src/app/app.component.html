@@ -1,42 +1,25 @@
-<!-- Login bar -->
-<div *ngIf="!isLogged" class="bg-secondary">
-	<form class="form-inline mr-sm-2">
-		<div class="input-group input-group-sm mx-auto">
-			<div class="input-group-prepend">
-				<fa-icon [icon]="['far', 'user-circle']" class="input-group-text"></fa-icon>
-			</div>
-			<input [(ngModel)]="login" id="login" type="text" class="form-control" name="login" placeholder="Login">
-			<div class="input-group-prepend input-group-append">
-				<fa-icon [icon]="['fas', 'key']" class="input-group-text"></fa-icon>
-			</div>
-			<input [(ngModel)]="password" id="password" type="password" class="form-control" name="password" placeholder="Password">
-			<div class="input-group-append">
-				<button class="btn btn-primary" (click)="confirm()">Log in</button>
-			</div>
+<!-- <mat-toolbar>
+	<mat-form-field>  -->
+		<!-- Login bar -->	
+		<div *ngIf="!isLogged">
+			<!-- 
+			<input matInput [(ngModel)]="login" type="text" name="login" placeholder="Login">
+			<input matInput [(ngModel)]="password" type="password" name="password" placeholder="Password">
+			 -->
+			<button mat-raised-button (click)="confirm()">Log in</button>
 		</div>
-	</form>
-</div> 
-
-<div *ngIf="isLogged" class="bg-secondary fixed-top">
-	<!-- Search bar -->
-	<form class="form-inline mr-sm-2">
-		<div class="input-group input-group-sm mx-auto w-75">
-			<div class="input-group-prepend">
-				<fa-icon [icon]="['far', 'address-card']" class="input-group-text"></fa-icon>
-			</div>
+		<!--  Search bar -->
+		<div *ngIf="isLogged">
+			<!--
 			<input	id="patientName" name="patientName" type="text" class="form-control" placeholder="Search..."
 					autocomplete="off"
 					[(ngModel)]="patientName" [typeahead]="allPatientNames" [typeaheadLatinize]="true"
 					(typeaheadOnSelect)="loadPatientData($event)"
 					>
+			-->
 		</div>
-	</form>
-	<!-- Session info / Logout bar -->
-	<div class="text-right fixed-bottom bg-secondary">
-		<strong *ngIf="hasDrData"> Logged as {{ doctor.name }} </strong>
-		<button class="btn btn-warning align-self-right" (click)="logout()">Logout</button>
-	</div>
-</div>
+	<!-- </mat-form-field>
+</mat-toolbar> -->
 
 <div class='container'>
   <router-outlet></router-outlet>
