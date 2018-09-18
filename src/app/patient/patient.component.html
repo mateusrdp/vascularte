@@ -1,6 +1,8 @@
+<p style="margin-bottom:1.2cm;"></p>
 <form>
 	<button class="btn btn-primary" (click)="newPatient()" *ngIf="!patient">New Patient</button>
 	<div *ngIf="patient">
+		<fa-icon [icon]="['far', 'times-circle']" class="float-right"></fa-icon>
 		<input type="text" class="form-control border-0" name="name" placeHolder="Name" [(ngModel)]="patient.name">
 		<label for="dob">Born on 
 		<input 	bsDatepicker 
@@ -21,6 +23,7 @@
 		<input type="text" class="form-control border-0" name="naturalFrom" placeHolder="Place of Birth" [(ngModel)]="patient.naturalFrom">
 		<input type="text" class="form-control border-0" name="origin" placeHolder="Origin" [(ngModel)]="patient.origin">
 		<input type="text" class="form-control border-0" name="referredBy" placeHolder="Referral" [(ngModel)]="patient.referredBy">
-		<textarea name="obs" placeHolder="Observations" class="form-control border-0" [(ngModel)]="patient.obs">{{patient.obs}}</textarea>
+		<textarea  name="obs" placeHolder="Observations" class="form-control border-0" [(ngModel)]="patient.obs">Something{{patient.obs}}</textarea>
 	</div>
 </form>
+<p style="margin-bottom:1.2cm;"></p>

@@ -17,17 +17,17 @@
 	</form>
 </div> 
 
-<div *ngIf="isLogged" class="bg-secondary">
+<div *ngIf="isLogged" class="bg-secondary fixed-top">
 	<!-- Search bar -->
 	<form class="form-inline mr-sm-2">
-		<div class="input-group input-group-sm mx-auto w-75 ">
+		<div class="input-group input-group-sm mx-auto w-75">
 			<div class="input-group-prepend">
 				<fa-icon [icon]="['far', 'address-card']" class="input-group-text"></fa-icon>
 			</div>
 			<input	id="patientName" name="patientName" type="text" class="form-control" placeholder="Search..."
 					autocomplete="off"
 					[(ngModel)]="patientName" [typeahead]="allPatientNames" [typeaheadLatinize]="true"
-					(typeaheadOnSelect)="loadPatientData()"
+					(typeaheadOnSelect)="loadPatientData($event)"
 					>
 		</div>
 	</form>
