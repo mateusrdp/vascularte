@@ -12,18 +12,20 @@ import { WelcomeComponent } from './welcome/welcome.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-//          MatIconModule,
-          MatButtonModule,
+  MatIconModule,
+  MatButtonModule,
 //          MatExpansionModule,
-//          MatDatepickerModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
 //          MatTooltipModule,
 //          MatSnackBarModule,
 //          MatDialogModule,
-//          MatToolbarModule,
-//          MatFormFieldModule,
-//          MatInputModule,
-//          MatAutocompleteModule,
-        } from '@angular/material';
+  MatSelectModule,
+  MatToolbarModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatAutocompleteModule, MAT_DATE_LOCALE,
+} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -43,20 +45,22 @@ import {
       { path: '**', redirectTo: '/welcome', pathMatch: 'full' }
     ]),
 
-//    MatIconModule,
+    MatIconModule,
     MatButtonModule,
 //    MatExpansionModule,
 //    MatExpansionModule,
-//    MatDatepickerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
 //    MatTooltipModule,
 //    MatSnackBarModule,
 //    MatDialogModule,
-//    MatToolbarModule,
-//    MatFormFieldModule,
-//    MatInputModule,
-//    MatAutocompleteModule,
+    MatSelectModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
   ],
-  providers: [AuthService],
+  providers: [AuthService, {provide: MAT_DATE_LOCALE, useValue: 'en-GB'}],
   bootstrap: [AppComponent]
 
 })

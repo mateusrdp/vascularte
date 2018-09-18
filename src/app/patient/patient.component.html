@@ -1,27 +1,47 @@
-<!-- 
-<form>
-	<button class="btn btn-primary" (click)="newPatient()" *ngIf="!patient">New Patient</button>
-	<div *ngIf="patient">
-		<input matInput type="text" class="form-control border-0" name="name" placeHolder="Name" [(ngModel)]="patient.name">
-		
-		<input matInput [matDatepicker]="picker" name="dob" placeHolder="Pick a date" [(ngModel)]="patient.dob">
-		<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-		<mat-datepicker #picker></mat-datepicker>
+<div *ngIf="patient">
+  <mat-form-field>
+    <input matInput type="text" class="form-control border-0" name="name" placeHolder="Name" [(ngModel)]="patient.name">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [matDatepicker]="picker" name="dob" placeHolder="Pick a date" [(ngModel)]="patient.dob">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select name="gender" placeHolder="Pick a gender" [(ngModel)]="patient.gender">
+      <mat-option name="genderM" value="M">Male</mat-option>
+      <mat-option name="genderF" value="F">Female</mat-option>
+      <mat-option name="genderO" value="O">It's complicated</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" name="ethnicity" placeHolder="Ethnicity" [(ngModel)]="patient.ethnicity">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" name="civilStatus" placeHolder="Civil Status" [(ngModel)]="patient.civilStatus">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" name="phone" placeHolder="Phone" [(ngModel)]="patient.phone">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" name="address" placeHolder="Address" [(ngModel)]="patient.address">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" name="profession" placeHolder="Profession" [(ngModel)]="patient.profession">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" name="naturalFrom" placeHolder="Place of Birth" [(ngModel)]="patient.naturalFrom">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" name="origin" placeHolder="Origin" [(ngModel)]="patient.origin">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" name="referredBy" placeHolder="Referral" [(ngModel)]="patient.referredBy">
+  </mat-form-field>
+  <mat-form-field>
+    <textarea matInput cdkTextareaAutosize name="obs" placeHolder="Observations" [(ngModel)]="patient.obs">Something{{patient.obs}}</textarea>
+  </mat-form-field>
+</div>
 
-		<mat-select name="gender" placeHolder="Pick a gender" [(ngModel)]="patient.gender">
-			<option name="genderM" value="M">Male
-			<option name="genderF" value="F">Female
-			<option name="genderO" value="O">It's complicated
-		</mat-select>
-		<input matInput type="text" name="ethnicity" placeHolder="Ethnicity" [(ngModel)]="patient.ethnicity">
-		<input matInput type="text" name="civilStatus" placeHolder="Civil Status" [(ngModel)]="patient.civilStatus">
-		<input matInput type="text" name="phone" placeHolder="Phone" [(ngModel)]="patient.phone">
-		<input matInput type="text" name="address" placeHolder="Address" [(ngModel)]="patient.address">
-		<input matInput type="text" name="profession" placeHolder="Profession" [(ngModel)]="patient.profession">
-		<input matInput type="text" name="naturalFrom" placeHolder="Place of Birth" [(ngModel)]="patient.naturalFrom">
-		<input matInput type="text" name="origin" placeHolder="Origin" [(ngModel)]="patient.origin">
-		<input matInput type="text" name="referredBy" placeHolder="Referral" [(ngModel)]="patient.referredBy">
-		<textarea matInput name="obs" placeHolder="Observations" [(ngModel)]="patient.obs">Something{{patient.obs}}</textarea>
-	</div>
-</form>
--->
+<button mat-mini-fab color="primary" (click)="newPatient()" *ngIf="!patient"><mat-icon>add_circle</mat-icon></button>
+<button mat-mini-fab color="warn" (click)="closePatient()" *ngIf="patient"><mat-icon>cancel</mat-icon></button>

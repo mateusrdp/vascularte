@@ -14,11 +14,11 @@ import { Apollo } from 'apollo-angular';
 
 export class AppComponent implements OnInit {
   title = 'Vascularte';
-  private login: string;
-  private password: string;
+  login: string;
+  password: string;
   private _isLogged: boolean;
   private _hasDrData: boolean;
-  private patientName: string; 
+  patientName: string;
 
   constructor(
     private authService: AuthService,
@@ -67,8 +67,8 @@ export class AppComponent implements OnInit {
     return this.data.allPatientNames;
   }
 
-  loadPatientData() {
-      this.data.loadPatientData(this.patientName);
+  loadPatientData(name: string) {
+    this.data.loadPatientData(name);
   }
   newPatient() {
     this.data.newPatient();

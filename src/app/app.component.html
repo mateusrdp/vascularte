@@ -1,25 +1,28 @@
-<!-- <mat-toolbar>
-	<mat-form-field>  -->
-		<!-- Login bar -->	
+<mat-toolbar>
+		<!-- Login bar -->
 		<div *ngIf="!isLogged">
-			<!-- 
-			<input matInput [(ngModel)]="login" type="text" name="login" placeholder="Login">
-			<input matInput [(ngModel)]="password" type="password" name="password" placeholder="Password">
-			 -->
-			<button mat-raised-button (click)="confirm()">Log in</button>
+      <mat-form-field>
+        <mat-icon>account_circle</mat-icon>
+			  <input matInput [(ngModel)]="login" type="text" name="login" placeholder="Login">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-icon>vpn_key</mat-icon>
+			  <input matInput [(ngModel)]="password" type="password" name="password" placeholder="Password">
+      </mat-form-field>
+			<button mat-mini-fab (click)="confirm()"><mat-icon>check_circle_outline</mat-icon></button>
 		</div>
 		<!--  Search bar -->
 		<div *ngIf="isLogged">
-			<!--
-			<input	id="patientName" name="patientName" type="text" class="form-control" placeholder="Search..."
-					autocomplete="off"
-					[(ngModel)]="patientName" [typeahead]="allPatientNames" [typeaheadLatinize]="true"
-					(typeaheadOnSelect)="loadPatientData($event)"
-					>
-			-->
+      <mat-form-field>
+        <input matInput type="text" name="patientName" [matAutocomplete]="auto" placeholder="Search..."
+               [(ngModel)]="patientName">
+      </mat-form-field>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="loadPatientData($event.option.value)">
+        <mat-option *ngFor="let patientName of allPatientNames" [value]="patientName" >{{patientName}}</mat-option>
+      </mat-autocomplete>
+    <button mat-mini-fab (click)="logout()"><mat-icon>logout</mat-icon></button>
 		</div>
-	<!-- </mat-form-field>
-</mat-toolbar> -->
+</mat-toolbar>
 
 <div class='container'>
   <router-outlet></router-outlet>
