@@ -1,15 +1,26 @@
-<div>
-	{{ patient.id }}
-	{{ patient.name }}
-	{{ patient.dob }}
-	{{ patient.gender }}
-	{{ patient.ethnicity }}
-	{{ patient.civilStatus }}
-	{{ patient.phone }}
-	{{ patient.address }}
-	{{ patient.profession }}
-	{{ patient.naturalFrom }}
-	{{ patient.origin }}
-	{{ patient.referredBy }}
-	{{ patient.obs }}
-</div>
+<form>
+	<button class="btn btn-primary" (click)="newPatient()" *ngIf="!patient">New Patient</button>
+	<div *ngIf="patient">
+		<input type="text" class="form-control border-0" name="name" placeHolder="Name" [(ngModel)]="patient.name">
+		<label for="dob">Born on 
+		<input 	bsDatepicker 
+				[bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-blue' }" 
+				type="text" class="form-control border-0" name="dob" placeHolder="Datepicker" [(ngModel)]="patient.dob">
+		</label>
+		
+		<select name="gender" class="form-control border-0" [(ngModel)]="patient.gender">
+			<option name="genderM" value="M">Male
+			<option name="genderF" value="F">Female
+			<option name="genderO" value="O">It's complicated
+		</select>
+		<input type="text" class="form-control border-0" name="ethnicity" placeHolder="Ethnicity" [(ngModel)]="patient.ethnicity">
+		<input type="text" class="form-control border-0" name="civilStatus" placeHolder="Civil Status" [(ngModel)]="patient.civilStatus">
+		<input type="text" class="form-control border-0" name="phone" placeHolder="Phone" [(ngModel)]="patient.phone">
+		<input type="text" class="form-control border-0" name="address" placeHolder="Address" [(ngModel)]="patient.address">
+		<input type="text" class="form-control border-0" name="profession" placeHolder="Profession" [(ngModel)]="patient.profession">
+		<input type="text" class="form-control border-0" name="naturalFrom" placeHolder="Place of Birth" [(ngModel)]="patient.naturalFrom">
+		<input type="text" class="form-control border-0" name="origin" placeHolder="Origin" [(ngModel)]="patient.origin">
+		<input type="text" class="form-control border-0" name="referredBy" placeHolder="Referral" [(ngModel)]="patient.referredBy">
+		<textarea name="obs" placeHolder="Observations" class="form-control border-0" [(ngModel)]="patient.obs">{{patient.obs}}</textarea>
+	</div>
+</form>

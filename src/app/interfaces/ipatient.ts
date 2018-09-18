@@ -1,7 +1,7 @@
 export interface IPatient {
   id: number;
   name: string;
-  dob: string;
+  dob: Date;
   gender: string;
   ethnicity: string;
   civilStatus: string;

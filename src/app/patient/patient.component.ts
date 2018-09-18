@@ -16,4 +16,8 @@ export class PatientComponent implements OnInit {
     return this.data.patient;
   }
 
+  newPatient() {
+    this.data.newPatient();
+  }
+
 }

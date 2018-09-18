@@ -14,6 +14,7 @@ export class AuthService {
   private _isAuthenticated = new BehaviorSubject(false);
   private _isGod = new BehaviorSubject(false);
 
+  private _hasDrsData = new BehaviorSubject(false);
   private _doctor: IDoctor | undefined;
 
   get doctor(): IDoctor {
@@ -22,6 +23,9 @@ export class AuthService {
 
   get isAuthenticated(): Observable<boolean> {
     return this._isAuthenticated.asObservable();
+  }
+  get hasDrData(): Observable<boolean> {
+    return this._hasDrsData.asObservable();
   }
 
   constructor(private apollo: Apollo, private data: DataService) { }
@@ -32,6 +36,7 @@ export class AuthService {
     // Fetch Doctor data
     this.apollo.query<DrsDataResponse>({ query: DRS_DATA }).subscribe(result => {
       this._doctor = result.data.doctor;
+      this._hasDrsData.next(true);
     }, error => {
       alert(error);
     });
@@ -55,6 +60,7 @@ export class AuthService {
       }).subscribe((result) => {
         const token = result.data.signIn.token;
         this.saveUserData(token);
+        this.setUserLogin();
       }, (error) => {
         alert(error);
       });

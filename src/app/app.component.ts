@@ -17,7 +17,8 @@ export class AppComponent implements OnInit {
   private login: string;
   private password: string;
   private patientName: string;
-  
+  private _isLogged: boolean;
+  private _hasDrData: boolean;
 
   constructor(
     private authService: AuthService,
@@ -28,11 +29,21 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.authService.autologin();
+    this.authService.isAuthenticated.subscribe( x => {this._isLogged = x;});
+    this.authService.hasDrData.subscribe(x => { this._hasDrData = x; });
   }
 
   /**
    * Authentication Stuff
    */
+
+  get isLogged() {
+    return this._isLogged;
+  }
+
+  get hasDrData() {
+    return this._hasDrData;
+  }
 
   get doctor() {
     return this.authService.doctor;
@@ -45,7 +56,7 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/welcome']);
   }
 
   /**
@@ -58,5 +69,9 @@ export class AppComponent implements OnInit {
 
   loadPatientData() {
     this.data.loadPatientData(this.patientName);
+  }
+  newPatient() {
+    this.data.newPatient();
+    this.router.navigate(['/patient']);
   }
 }
