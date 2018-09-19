@@ -1,6 +1,8 @@
 import { IDoctor } from '../interfaces/idoctor';
 import { IPatient } from '../interfaces/ipatient';
 import gql from 'graphql-tag';
+import {IConsultation} from '../interfaces/iconsultation';
+import {IPayment} from '../interfaces/ipayment';
 
 export const ALL_PATIENT_NAMES = gql `query AllPatientNames{ patient { name } }`;
 
@@ -69,6 +71,41 @@ export const PATIENT_DATA = gql`
 `;
 
 export interface PatientDataResponse {
-  patient: IPatient;
+  patient: IPatient[];
+  loading: boolean;
+}
+
+export const CONSULTATION_DATA = gql`
+  query ConsultationData($name: String!) {
+    consultation (name: $name) {
+      anamnesis
+      physical
+      hypothesis
+      conduct
+      evolution
+      examination
+      surgicalProcedures
+    }
+  }
+`;
+
+export interface ConsultationDataResponse {
+  consultation: IConsultation[];
+  loading: boolean;
+}
+
+export const PAYMENT_DATA = gql`
+  query PaymentData($name: String!) {
+    payment (name: $name) {
+      date
+      insuranceProviderName
+      amountCharged
+      receipt
+    }
+  }
+`;
+
+export interface PaymentDataResponse {
+  payment: IPayment[];
   loading: boolean;
 }

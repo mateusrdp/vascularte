@@ -1,47 +1,97 @@
-<div *ngIf="patient">
-  <mat-form-field>
-    <input matInput type="text" class="form-control border-0" name="name" placeHolder="Name" [(ngModel)]="patient.name">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput [matDatepicker]="picker" name="dob" placeHolder="Pick a date" [(ngModel)]="patient.dob">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
-  <mat-form-field>
-    <mat-select name="gender" placeHolder="Pick a gender" [(ngModel)]="patient.gender">
-      <mat-option name="genderM" value="M">Male</mat-option>
-      <mat-option name="genderF" value="F">Female</mat-option>
-      <mat-option name="genderO" value="O">It's complicated</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput type="text" name="ethnicity" placeHolder="Ethnicity" [(ngModel)]="patient.ethnicity">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput type="text" name="civilStatus" placeHolder="Civil Status" [(ngModel)]="patient.civilStatus">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput type="text" name="phone" placeHolder="Phone" [(ngModel)]="patient.phone">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput type="text" name="address" placeHolder="Address" [(ngModel)]="patient.address">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput type="text" name="profession" placeHolder="Profession" [(ngModel)]="patient.profession">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput type="text" name="naturalFrom" placeHolder="Place of Birth" [(ngModel)]="patient.naturalFrom">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput type="text" name="origin" placeHolder="Origin" [(ngModel)]="patient.origin">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput type="text" name="referredBy" placeHolder="Referral" [(ngModel)]="patient.referredBy">
-  </mat-form-field>
-  <mat-form-field>
-    <textarea matInput cdkTextareaAutosize name="obs" placeHolder="Observations" [(ngModel)]="patient.obs">Something{{patient.obs}}</textarea>
-  </mat-form-field>
+<div style="position: fixed; right: 10px; bottom: 10px;">
+    <button mat-fab color="primary" class="my-fab" (click)="newPatient()" *ngIf="!patient"><mat-icon>add_circle</mat-icon></button>
+    <button mat-fab color="warn" (click)="openPaymentOptions()" *ngIf="patient"><mat-icon>attach_money</mat-icon></button>
+    <button mat-fab color="warn" (click)="closePatient()" *ngIf="patient"><mat-icon>cancel</mat-icon></button>
 </div>
+<div *ngIf="patient">
+  <mat-accordion [multi]="true">
+    <mat-expansion-panel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>account_box</mat-icon>
+          Patient Data
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <input matInput type="text" name="name" placeHolder="Name" [(ngModel)]="patient.name">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker" name="dob" placeHolder="Pick a date" [(ngModel)]="patient.dob">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select name="gender" placeHolder="Pick a gender" [(ngModel)]="patient.gender">
+          <mat-option name="genderM" value="M">Male</mat-option>
+          <mat-option name="genderF" value="F">Female</mat-option>
+          <mat-option name="genderO" value="O">It's complicated</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" name="ethnicity" placeHolder="Ethnicity" [(ngModel)]="patient.ethnicity">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" name="civilStatus" placeHolder="Civil Status" [(ngModel)]="patient.civilStatus">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" name="phone" placeHolder="Phone" [(ngModel)]="patient.phone">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" name="address" placeHolder="Address" [(ngModel)]="patient.address">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" name="profession" placeHolder="Profession" [(ngModel)]="patient.profession">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" name="naturalFrom" placeHolder="Place of Birth" [(ngModel)]="patient.naturalFrom">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" name="origin" placeHolder="Origin" [(ngModel)]="patient.origin">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" name="referredBy" placeHolder="Referral" [(ngModel)]="patient.referredBy">
+      </mat-form-field>
+      <mat-form-field>
+        <textarea matInput cdkTextareaAutosize name="obs" placeHolder="Observations" [(ngModel)]="patient.obs">{{patient.obs}}</textarea>
+      </mat-form-field>
+      <mat-action-row>
+        <button mat-icon-button><mat-icon>delete</mat-icon></button>
+      </mat-action-row>
 
-<button mat-mini-fab color="primary" (click)="newPatient()" *ngIf="!patient"><mat-icon>add_circle</mat-icon></button>
-<button mat-mini-fab color="warn" (click)="closePatient()" *ngIf="patient"><mat-icon>cancel</mat-icon></button>
+    </mat-expansion-panel>
+      <!-- Sensitive info are -->
+    <div *ngIf="isRegisteredDoctor">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>local_hospital</mat-icon>
+            Consultation
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div *ngIf="consultation">
+          <mat-form-field>
+            <textarea matInput cdkTextareaAutosize name="anamnesis" placeHolder="Anamnesis" [(ngModel)]="consultation.anamnesis">{{consultation.anamnesis}}</textarea>
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput cdkTextareaAutosize name="physical" placeHolder="Physical" [(ngModel)]="consultation.physical">{{consultation.physical}}</textarea>
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput cdkTextareaAutosize name="hypothesis" placeHolder="Hypothesis" [(ngModel)]="consultation.hypothesis">{{consultation.hypothesis}}</textarea>
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput cdkTextareaAutosize name="conduct" placeHolder="Conduct" [(ngModel)]="consultation.conduct">{{consultation.conduct}}</textarea>
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput cdkTextareaAutosize name="evolution" placeHolder="Evolution" [(ngModel)]="consultation.evolution">{{consultation.evolution}}</textarea>
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput cdkTextareaAutosize name="examination" placeHolder="Examination" [(ngModel)]="consultation.examination">{{consultation.examination}}</textarea>
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput cdkTextareaAutosize name="surgicalProcedures" placeHolder="SurgicalProcedures" [(ngModel)]="consultation.surgical_procedures">{{consultation.surgical_procedures}}</textarea>
+          </mat-form-field>
+        </div>
+      </mat-expansion-panel>
+    </div>
+  </mat-accordion>
+</div>

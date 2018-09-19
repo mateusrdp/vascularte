@@ -28,7 +28,11 @@ export class AuthService {
     return this._hasDrsData.asObservable();
   }
 
-  constructor(private apollo: Apollo, private data: DataService) { }
+  get isRegisteredDoctor(): boolean {
+    return this.hasDrData && this.doctor.register > 0;
+  }
+
+  constructor(private apollo: Apollo) { }
 
   setUserLogin() {
     this._isAuthenticated.next(true);
@@ -40,9 +44,6 @@ export class AuthService {
     }, error => {
       alert(error);
     });
-
-    // Refetch all patient names
-    this.data.refetchPatientNames();
   }
 
   saveUserData(token: string) {
@@ -68,9 +69,9 @@ export class AuthService {
   }
 
   logout() {
-    console.log("logging out");
+    console.log('logging out');
     localStorage.removeItem(__AUTH_TOKEN);
-    localStorage.removeItem(__GOD_TOKEN); //Just in case
+    localStorage.removeItem(__GOD_TOKEN); // Just in case
     this._isAuthenticated.next(false);
   }
 

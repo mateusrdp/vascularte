@@ -1,27 +1,40 @@
-<mat-toolbar>
-		<!-- Login bar -->
-		<div *ngIf="!isLogged">
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <!-- Login bar -->
+    <div *ngIf="!isLogged">
       <mat-form-field>
         <mat-icon>account_circle</mat-icon>
-			  <input matInput [(ngModel)]="login" type="text" name="login" placeholder="Login">
+        <input matInput [(ngModel)]="login" type="text" name="login" placeholder="Login">
       </mat-form-field>
       <mat-form-field>
         <mat-icon>vpn_key</mat-icon>
-			  <input matInput [(ngModel)]="password" type="password" name="password" placeholder="Password">
+        <input matInput [(ngModel)]="password" type="password" name="password" placeholder="Password">
       </mat-form-field>
-			<button mat-mini-fab (click)="confirm()"><mat-icon>check_circle_outline</mat-icon></button>
-		</div>
-		<!--  Search bar -->
-		<div *ngIf="isLogged">
+      <button mat-mini-fab (click)="confirm()"><mat-icon>check_circle_outline</mat-icon></button>
+    </div>
+
+    <!--  Search bar -->
+    <div *ngIf="isLogged">
       <mat-form-field>
-        <input matInput type="text" name="patientName" [matAutocomplete]="auto" placeholder="Search..."
-               [(ngModel)]="patientName">
+        <input matInput type="text" name="patientName" [matAutocomplete]="auto" placeholder="Search...">
+        <mat-icon>search</mat-icon>
       </mat-form-field>
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="loadPatientData($event.option.value)">
         <mat-option *ngFor="let patientName of allPatientNames" [value]="patientName" >{{patientName}}</mat-option>
       </mat-autocomplete>
-    <button mat-mini-fab (click)="logout()"><mat-icon>logout</mat-icon></button>
-		</div>
+    </div>
+    <span class="fill-remaining-space"></span>
+    <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="isLogged"><mat-icon>menu</mat-icon></button>
+    <mat-menu #menu='matMenu'>
+      <button mat-menu-item><mat-icon>assignment_turned_in</mat-icon>Documents</button>
+      <button mat-menu-item><mat-icon>attach_money</mat-icon>Finances</button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item><mat-icon>settings</mat-icon>Account Settings</button>
+      <button mat-menu-item><mat-icon>color_lens</mat-icon>Theme</button>
+      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>
+    </mat-menu>
+
+  </mat-toolbar-row>
 </mat-toolbar>
 
 <div class='container'>

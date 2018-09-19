@@ -1,3 +1,9 @@
+// TODO: implement toolbar with: Document Printer, Settings and Logout
+// TODO: implement Settings with: Insurance Providers, Document Templates (DocType) and Account Settings
+// TODO: implement Document Writer/Viewer
+// TODO: implement Account Settings with: Doctor Data Maintenance and Data Exporter
+// TODO: implement Data Exporter
+
 import { AuthService } from './auth/auth.service';
 import { DataService } from './data/data.service';
 import { IDoctor } from './interfaces/idoctor';
@@ -13,12 +19,10 @@ import { Apollo } from 'apollo-angular';
 })
 
 export class AppComponent implements OnInit {
-  title = 'Vascularte';
   login: string;
   password: string;
   private _isLogged: boolean;
   private _hasDrData: boolean;
-  patientName: string;
 
   constructor(
     private authService: AuthService,
@@ -29,7 +33,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.authService.autologin();
-    this.authService.isAuthenticated.subscribe( x => {this._isLogged = x;});
+    this.authService.isAuthenticated.subscribe( x => {
+      this._isLogged = x;
+      this.data.refetchPatientNames();
+    });
     this.authService.hasDrData.subscribe(x => { this._hasDrData = x; });
   }
 
@@ -41,17 +48,14 @@ export class AppComponent implements OnInit {
     return this._isLogged;
   }
 
-  get hasDrData() {
-    return this._hasDrData;
-  }
-
-  get doctor() {
-    return this.authService.doctor;
-  }
-
   confirm() {
     this.authService.login(this.login, this.password);
-    this.router.navigate(['/patient']);
+    this.authService.isAuthenticated.subscribe(ok => {
+      if (ok) {
+        this.data.refetchPatientNames();
+        this.router.navigate(['/patient']);
+      }
+    });
   }
 
   logout() {
@@ -70,8 +74,5 @@ export class AppComponent implements OnInit {
   loadPatientData(name: string) {
     this.data.loadPatientData(name);
   }
-  newPatient() {
-    this.data.newPatient();
-    this.router.navigate(['/patient']);
-  }
+
 }
