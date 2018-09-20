@@ -11,36 +11,36 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private _isAuthenticated = new BehaviorSubject(false);
-  private _isGod = new BehaviorSubject(false);
+  private _authenticaticonStatusChanges = new BehaviorSubject(false);
+  private _godStatusChanges = new BehaviorSubject(false);
 
-  private _hasDrsData = new BehaviorSubject(false);
+  private _drDataAvailabilityChanges = new BehaviorSubject(false);
   private _doctor: IDoctor | undefined;
 
   get doctor(): IDoctor {
     return this._doctor;
   }
 
-  get isAuthenticated(): Observable<boolean> {
-    return this._isAuthenticated.asObservable();
+  get authenticaticonStatusChanges(): Observable<boolean> {
+    return this._authenticaticonStatusChanges.asObservable();
   }
-  get hasDrData(): Observable<boolean> {
-    return this._hasDrsData.asObservable();
+  get drDataAvailabilityChanges(): Observable<boolean> {
+    return this._drDataAvailabilityChanges.asObservable();
   }
 
   get isRegisteredDoctor(): boolean {
-    return this.hasDrData && this.doctor.register > 0;
+    return this._doctor && this.doctor.register > 0;
   }
 
   constructor(private apollo: Apollo) { }
 
   setUserLogin() {
-    this._isAuthenticated.next(true);
+    this._authenticaticonStatusChanges.next(true);
 
     // Fetch Doctor data
     this.apollo.query<DrsDataResponse>({ query: DRS_DATA }).subscribe(result => {
       this._doctor = result.data.doctor;
-      this._hasDrsData.next(true);
+      this._drDataAvailabilityChanges.next(true);
     }, error => {
       alert(error);
     });
@@ -72,7 +72,7 @@ export class AuthService {
     console.log('logging out');
     localStorage.removeItem(__AUTH_TOKEN);
     localStorage.removeItem(__GOD_TOKEN); // Just in case
-    this._isAuthenticated.next(false);
+    this._authenticaticonStatusChanges.next(false);
   }
 
   autologin() {
@@ -85,7 +85,7 @@ export class AuthService {
   // TODO: implement godMode
 //  ascend() {
 //    const godMode = localStorage.getItem(__GOD_TOKEN);
-//    this._isGod.next(true);
+//    this._godStatusChanges.next(true);
 //  }
 
 }

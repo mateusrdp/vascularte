@@ -1,3 +1,8 @@
 export interface IPayment {
-  all: string
+  id: number;
+  login: string;
+  date: string;
+  insuranceProviderName: string;
+  amountCharged: number;
+  receipt: number;
 }

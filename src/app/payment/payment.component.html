@@ -1,16 +1,16 @@
 <mat-form-field>
-  <input matInput [matDatepicker]="picker" name="dob" placeHolder="Pick a date">
+  <input matInput [matDatepicker]="picker" name="dob" placeHolder="Pick a date" [(ngModel)]="date">
   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
 </mat-form-field>
 <!-- Replace this with an autocomplete -->
 <mat-form-field>
-  <input matInput type="text" name="insuranceProvider" placeHolder="Insurance Provider">
+  <input matInput type="text" name="insuranceProvider" placeHolder="Insurance Provider" [(ngModel)]="insuranceProviderName">
 </mat-form-field>
 <mat-form-field>
-  <input matInput type="text" name="amountCharged" placeHolder="Amount Charged">
+  <input matInput type="text" name="amountCharged" placeHolder="Amount Charged" [(ngModel)]="amountCharged">
 </mat-form-field>
 <mat-form-field>
-  <input matInput type="text" name="receipt" placeHolder="Receipt">
+  <input matInput type="text" name="receipt" placeHolder="Receipt" [(ngModel)]="receipt">
 </mat-form-field>
-<button mat-raised-button="" color="primary" *ngIf="!patient"><mat-icon>attach_money</mat-icon>Save</button>
+<button mat-raised-button="" color="primary" (click)="submitPayment()"><mat-icon>attach_money</mat-icon>Save</button>

@@ -109,3 +109,50 @@ export interface PaymentDataResponse {
   payment: IPayment[];
   loading: boolean;
 }
+
+export const ADD_PAYMENT = gql`
+  mutation AddPayment(
+    $pacId: Int!,
+    $payDate: String!,
+    $insuranceProviderName: String!,
+    $amountCharged: Float!,
+    $receipt: Float!
+  ){
+    addPayment(
+      id:$pacId,
+      date:$payDate,
+      insuranceProviderName:$insuranceProviderName,
+      amountCharged:$amountCharged,
+      receipt:$receipt
+    ) {
+      id
+      date
+      insuranceProviderName
+      amountCharged
+      receipt
+    }
+  }
+`;
+
+export interface AddOrRemovePaymentDataResponse {
+  payment: IPayment;
+  loading: boolean;
+}
+
+export const REMOVE_PAYMENT = gql`
+  mutation RemovePayment(
+  $pacId: Int!,
+  $payDate: String!
+  ){
+    removePayment(
+      id:$pacId,
+      date:$payDate,
+    ) {
+      id
+      date
+      insuranceProviderName
+      amountCharged
+      receipt
+    }
+  }
+`;

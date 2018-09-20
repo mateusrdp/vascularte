@@ -8,7 +8,7 @@ import {
   PatientDataResponse,
   PATIENT_DATA,
   ConsultationDataResponse,
-  CONSULTATION_DATA, PaymentDataResponse, PAYMENT_DATA
+  CONSULTATION_DATA, PaymentDataResponse, PAYMENT_DATA, ADD_PAYMENT, AddOrRemovePaymentDataResponse, REMOVE_PAYMENT
 } from '../graphql/queries';
 import { IPatient } from '../interfaces/ipatient';
 import { IConsultation } from '../interfaces/iconsultation';
@@ -19,13 +19,15 @@ import {BehaviorSubject} from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class DataService implements OnInit {
 
+  // TODO: implement this with GraphQL subscriptions, so the drs always have an up-to-date list of patients, as the secretary adds them
   private _allPatientNames: string[] = [];
 
   private _patient: IPatient = null;
   private _consultation: IConsultation = null;
   private _payments: IPayment[] = null;
 
-  private _newPaymentData = new BehaviorSubject(false);
+  private _paymentAdded = new BehaviorSubject({id: -1, login: '', date: '', insuranceProviderName: '', amountCharged: 0, receipt: 0 });
+  private _paymentRemoved = new BehaviorSubject({id: -1, login: '', date: '', insuranceProviderName: '', amountCharged: 0, receipt: 0 });
 
   ngOnInit() {}
 
@@ -126,19 +128,53 @@ export class DataService implements OnInit {
     return this._payments;
   }
 
-  get newPaymentData() {
-    return this._newPaymentData.asObservable();
-  }
-
   loadPaymentData() {
     this.apollo.query<PaymentDataResponse>({
       query: PAYMENT_DATA,
       variables: {name: this.patient.name}
     }).subscribe(result => {
       this._payments = result.data.payment;
-      this._newPaymentData.next(true);
     }, error => {
       alert(error);
     });
+  }
+
+  addPayment(pacId: Number, payDate: String, insuranceProviderName: String, amountCharged: Number, receipt: Number) {
+    this.apollo.mutate<AddOrRemovePaymentDataResponse>({
+      mutation: ADD_PAYMENT,
+      variables: {
+        pacId: pacId,
+        payDate: payDate,
+        insuranceProviderName: insuranceProviderName,
+        amountCharged: amountCharged,
+        receipt: receipt
+      }
+    }).subscribe(result => {
+      this._paymentAdded.next(result.data.addPayment);
+    }, error => {
+      alert(error);
+    });
+  }
+
+  removePayment(payment: IPayment) {
+    this.apollo.mutate<AddOrRemovePaymentDataResponse>({
+      mutation: REMOVE_PAYMENT,
+      variables: {
+        pacId: payment.id,
+        payDate: payment.date,
+      }
+    }).subscribe(result => {
+      this._paymentRemoved.next(result.data.removePayment);
+    }, error => {
+      alert(error);
+    });
+  }
+
+  get paymentAdded() {
+    return this._paymentAdded.asObservable();
+  }
+
+  get paymentRemoved() {
+    return this._paymentRemoved.asObservable();
   }
 }

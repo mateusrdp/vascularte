@@ -33,11 +33,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.authService.autologin();
-    this.authService.isAuthenticated.subscribe( x => {
+    this.authService.authenticaticonStatusChanges.subscribe(x => {
       this._isLogged = x;
       this.data.refetchPatientNames();
     });
-    this.authService.hasDrData.subscribe(x => { this._hasDrData = x; });
+    this.authService.drDataAvailabilityChanges.subscribe(x => { this._hasDrData = x; });
   }
 
   /**
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
 
   confirm() {
     this.authService.login(this.login, this.password);
-    this.authService.isAuthenticated.subscribe(ok => {
+    this.authService.authenticaticonStatusChanges.subscribe(ok => {
       if (ok) {
         this.data.refetchPatientNames();
         this.router.navigate(['/patient']);

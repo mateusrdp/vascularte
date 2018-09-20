@@ -12,7 +12,11 @@ import {PaymentComponent} from '../payment/payment.component';
   styleUrls: ['./patient.component.css']
 })
 export class PatientComponent implements OnInit {
-  constructor(private data: DataService, private auth: AuthService, private paymentBottomSheet: MatBottomSheet) {}
+  constructor(
+    private data: DataService,
+    private auth: AuthService,
+    private paymentBottomSheet: MatBottomSheet
+  ) {}
 
   ngOnInit() { }
 

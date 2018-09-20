@@ -1,6 +1,6 @@
 <div style="position: fixed; right: 10px; bottom: 10px;">
     <button mat-fab color="primary" class="my-fab" (click)="newPatient()" *ngIf="!patient"><mat-icon>add_circle</mat-icon></button>
-    <button mat-fab color="warn" (click)="openPaymentOptions()" *ngIf="patient"><mat-icon>attach_money</mat-icon></button>
+    <button mat-fab color="primary" (click)="openPaymentOptions()" *ngIf="patient"><mat-icon>attach_money</mat-icon></button>
     <button mat-fab color="warn" (click)="closePatient()" *ngIf="patient"><mat-icon>cancel</mat-icon></button>
 </div>
 <div *ngIf="patient">

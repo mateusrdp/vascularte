@@ -28,7 +28,7 @@ import {
   MAT_DATE_LOCALE,
   MatTableModule,
   MatPaginatorModule,
-  MatBottomSheetModule,
+  MatBottomSheetModule, MatSnackBarModule,
 } from '@angular/material';
 import { DocumentComponent } from './document/document.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
@@ -77,6 +77,7 @@ import { PaymentComponent } from './payment/payment.component';
     MatInputModule,
     MatAutocompleteModule,
     MatBottomSheetModule,
+    MatSnackBarModule,
   ],
   entryComponents: [
     PaymentComponent
