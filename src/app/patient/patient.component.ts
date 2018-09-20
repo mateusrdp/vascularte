@@ -3,8 +3,9 @@
 import {DataService} from '../data/data.service';
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
-import {MatBottomSheet} from '@angular/material';
+import {MatBottomSheet, MatSnackBar} from '@angular/material';
 import {PaymentComponent} from '../payment/payment.component';
+import {FormControl, NgForm, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-patient',
@@ -12,10 +13,12 @@ import {PaymentComponent} from '../payment/payment.component';
   styleUrls: ['./patient.component.css']
 })
 export class PatientComponent implements OnInit {
+
   constructor(
     private data: DataService,
     private auth: AuthService,
-    private paymentBottomSheet: MatBottomSheet
+    private paymentBottomSheet: MatBottomSheet,
+    public snackBar: MatSnackBar
   ) {}
 
   ngOnInit() { }
@@ -42,6 +45,19 @@ export class PatientComponent implements OnInit {
 
   openPaymentOptions() {
     this.paymentBottomSheet.open(PaymentComponent);
+  }
+
+  createPatientIfNeeded(f: NgForm) {
+    if (f.valid && this.patient.id <= 0) {
+      const ref = this.snackBar.open('Add ' + f.value.name + ' to the database?', 'Yes please');
+      ref.onAction().subscribe(() => {
+        this.data.createPatientData();
+      });
+    }
+  }
+
+  dismissSnackBar() {
+    this.snackBar.dismiss();
   }
 
 }

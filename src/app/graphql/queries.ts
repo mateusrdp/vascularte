@@ -75,6 +75,57 @@ export interface PatientDataResponse {
   loading: boolean;
 }
 
+export const CREATE_PATIENT = gql`
+  mutation CreatePatient(
+    $name: String!
+    $dob: String!
+    $gender: String
+    $ethnicity: String
+    $civilStatus: String
+    $phone: String
+    $profession: String
+    $address: String
+    $naturalFrom: String
+    $origin: String
+    $referredBy: String
+    $obs: String
+  ) {
+    addPatient (
+      name: $name
+      dob: $dob
+      gender: $gender
+      ethnicity: $ethnicity
+      civilStatus: $civilStatus
+      phone: $phone
+      profession: $profession
+      address: $address
+      naturalFrom: $naturalFrom
+      origin: $origin
+      referredBy: $referredBy
+      obs: $obs
+    ) {
+      id
+      name
+      dob
+      gender
+      ethnicity
+      civilStatus
+      phone
+      profession
+      address
+      naturalFrom
+      origin
+      referredBy
+      obs
+    }
+  }
+`;
+
+export interface PatientCreateResponse {
+  patient: IPatient;
+  loading: boolean;
+}
+
 export const CONSULTATION_DATA = gql`
   query ConsultationData($name: String!) {
     consultation (name: $name) {
@@ -91,6 +142,45 @@ export const CONSULTATION_DATA = gql`
 
 export interface ConsultationDataResponse {
   consultation: IConsultation[];
+  loading: boolean;
+}
+
+export const CREATE_CONSULTATION = gql`
+  mutation CreateConsultation(
+    $id: Int!,
+    $anamnesis: String,
+    $physical: String,
+    $hypothesis: String,
+    $conduct: String,
+    $evolution: String,
+    $examination: String,
+    $surgicalProcedures: String
+  ) {
+    addConsultation (
+      id:$id,
+      anamnesis:$anamnesis,
+      physical:$physical,
+      hypothesis:$hypothesis,
+      conduct:$conduct,
+      evolution:$evolution,
+      examination:$examination,
+      surgicalProcedures:$surgicalProcedures
+    ) {
+      login
+      id
+      anamnesis
+      physical
+      hypothesis
+      conduct
+      evolution
+      examination
+      surgicalProcedures
+    }
+  }
+`;
+
+export interface ConsultationCreateResponse {
+  consultation: IConsultation;
   loading: boolean;
 }
 

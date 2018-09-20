@@ -8,12 +8,19 @@ import {
   PatientDataResponse,
   PATIENT_DATA,
   ConsultationDataResponse,
-  CONSULTATION_DATA, PaymentDataResponse, PAYMENT_DATA, ADD_PAYMENT, AddOrRemovePaymentDataResponse, REMOVE_PAYMENT
+  CONSULTATION_DATA,
+  PaymentDataResponse,
+  PAYMENT_DATA,
+  ADD_PAYMENT,
+  AddOrRemovePaymentDataResponse,
+  REMOVE_PAYMENT,
+  CREATE_CONSULTATION,
+  ConsultationCreateResponse, CREATE_PATIENT, PatientCreateResponse
 } from '../graphql/queries';
-import { IPatient } from '../interfaces/ipatient';
-import { IConsultation } from '../interfaces/iconsultation';
-import { AuthService } from '../auth/auth.service';
-import { IPayment } from '../interfaces/ipayment';
+import {IPatient} from '../interfaces/ipatient';
+import {IConsultation} from '../interfaces/iconsultation';
+import {AuthService} from '../auth/auth.service';
+import {IPayment} from '../interfaces/ipayment';
 import {BehaviorSubject} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -66,6 +73,31 @@ export class DataService implements OnInit {
     });
   }
 
+  createPatientData() {
+    this.apollo.mutate<PatientCreateResponse>({
+      mutation: CREATE_PATIENT,
+      variables: {
+        name: this.patient.name,
+        dob: this.patient.dob,
+        gender: this.patient.gender,
+        ethnicity: this.patient.ethnicity,
+        civilStatus: this.patient.civilStatus,
+        phone: this.patient.phone,
+        profession: this.patient.profession,
+        address: this.patient.address,
+        naturalFrom: this.patient.naturalFrom,
+        origin: this.patient.origin,
+        referredBy: this.patient.referredBy,
+        obs: this.patient.obs,
+      }
+    }).subscribe(result => {
+      this._patient = result.data.patient;
+      this._patient.dob = new Date(result.data.patient.dob); // hack to get the date right
+    }, error => {
+      alert(error);
+    });
+  }
+
   get patient() {
     return this._patient;
   }
@@ -74,7 +106,7 @@ export class DataService implements OnInit {
     this._patient = {
       id: -1,
       name: '',
-      dob: new Date(),
+      dob: null,
       gender: '',
       ethnicity: '',
       civilStatus: '',
@@ -88,6 +120,10 @@ export class DataService implements OnInit {
     };
   }
 
+  get isNewPatient() {
+    return this._patient.id <= 0;
+  }
+
   closePatient() {
     this._patient = null;
     this._consultation = null;
@@ -96,6 +132,20 @@ export class DataService implements OnInit {
 
   get consultation() {
     return this._consultation;
+  }
+
+  createConsultationData() {
+    this.apollo.mutate<ConsultationCreateResponse>({
+      mutation: CREATE_CONSULTATION,
+      variables: {name: this.patient.name}
+    }).subscribe(result => {
+      this._consultation = result.data.consultation[0];
+      if (!this._consultation) {
+        this.newConsultation();
+      }
+    }, error => {
+      alert(error);
+    });
   }
 
   loadConsultationData() {
@@ -114,6 +164,8 @@ export class DataService implements OnInit {
 
   newConsultation() {
     this._consultation = {
+      login: this.auth.doctor.login,
+      id: -1,
       anamnesis: '',
       physical: '',
       hypothesis: '',
@@ -122,6 +174,10 @@ export class DataService implements OnInit {
       examination: '',
       surgical_procedures: ''
     };
+  }
+
+  get isnewConsultation() {
+    return this._consultation.id <= 0;
   }
 
   get payments() {

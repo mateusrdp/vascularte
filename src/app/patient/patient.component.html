@@ -1,63 +1,93 @@
 <div style="position: fixed; right: 10px; bottom: 10px;">
     <button mat-fab color="primary" class="my-fab" (click)="newPatient()" *ngIf="!patient"><mat-icon>add_circle</mat-icon></button>
-    <button mat-fab color="primary" (click)="openPaymentOptions()" *ngIf="patient"><mat-icon>attach_money</mat-icon></button>
-    <button mat-fab color="warn" (click)="closePatient()" *ngIf="patient"><mat-icon>cancel</mat-icon></button>
+    <button mat-fab color="primary" (click)="openPaymentOptions()" *ngIf="patient" [disabled]="patient.id<=0"><mat-icon>attach_money</mat-icon></button>
+    <button mat-fab color="warn" (click)="closePatient(); dismissSnackBar();" *ngIf="patient"><mat-icon>cancel</mat-icon></button>
 </div>
 <div *ngIf="patient">
   <mat-accordion [multi]="true">
     <mat-expansion-panel expanded>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          <mat-icon>account_box</mat-icon>
+          <mat-icon>assignment_ind</mat-icon>
           Patient Data
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <mat-form-field>
-        <input matInput type="text" name="name" placeHolder="Name" [(ngModel)]="patient.name">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput [matDatepicker]="picker" name="dob" placeHolder="Pick a date" [(ngModel)]="patient.dob">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-select name="gender" placeHolder="Pick a gender" [(ngModel)]="patient.gender">
-          <mat-option name="genderM" value="M">Male</mat-option>
-          <mat-option name="genderF" value="F">Female</mat-option>
-          <mat-option name="genderO" value="O">It's complicated</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" name="ethnicity" placeHolder="Ethnicity" [(ngModel)]="patient.ethnicity">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" name="civilStatus" placeHolder="Civil Status" [(ngModel)]="patient.civilStatus">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" name="phone" placeHolder="Phone" [(ngModel)]="patient.phone">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" name="address" placeHolder="Address" [(ngModel)]="patient.address">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" name="profession" placeHolder="Profession" [(ngModel)]="patient.profession">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" name="naturalFrom" placeHolder="Place of Birth" [(ngModel)]="patient.naturalFrom">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" name="origin" placeHolder="Origin" [(ngModel)]="patient.origin">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="text" name="referredBy" placeHolder="Referral" [(ngModel)]="patient.referredBy">
-      </mat-form-field>
-      <mat-form-field>
-        <textarea matInput cdkTextareaAutosize name="obs" placeHolder="Observations" [(ngModel)]="patient.obs">{{patient.obs}}</textarea>
-      </mat-form-field>
+      <form #patForm="ngForm" autocomplete="off">
+        <mat-form-field style="width:100%;">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" name="name" placeHolder="Name" [(ngModel)]="patient.name" required (blur)="createPatientIfNeeded(patForm)">
+          <mat-error>Name required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Date of Birth</mat-label>
+          <input matInput [matDatepicker]="picker" name="dob" placeHolder="Pick a date" [(ngModel)]="patient.dob" required (dateInput)="createPatientIfNeeded(patForm)">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-hint>dd/MM/yyyy or use the date picker!</mat-hint>
+          <mat-error>Date of Birth required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Gender</mat-label>
+          <mat-select name="gender" placeHolder="Pick a gender" [(ngModel)]="patient.gender">
+            <mat-option name="genderM" value="M">Male</mat-option>
+            <mat-option name="genderF" value="F">Female</mat-option>
+            <mat-option name="genderO" value="O">It's complicated</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Ethnicity</mat-label>
+          <input matInput type="text" name="ethnicity" placeHolder="Ethnicity" [(ngModel)]="patient.ethnicity" [matAutocomplete]="ethVal">
+          <mat-autocomplete #ethVal="matAutocomplete">
+            <mat-option [value]="Caucasian">Caucasian</mat-option>
+            <mat-option [value]="Black">Black</mat-option>
+            <mat-option [value]="Brown">Brown</mat-option>
+            <mat-option [value]="Asian">Asian</mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Civil Status</mat-label>
+          <input matInput type="text" name="civilStatus" placeHolder="Civil Status"
+                 [(ngModel)]="patient.civilStatus" [matAutocomplete]="civilVal">
+          <mat-autocomplete #civilVal="matAutocomplete">
+            <mat-option [value]="Single">Single</mat-option>
+            <mat-option [value]="Married">Married</mat-option>
+            <mat-option [value]="Widowed">Widowed</mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Phone Number</mat-label>
+          <input matInput type="text" name="phone" placeHolder="(xx) xxxxx-xxxx" [(ngModel)]="patient.phone">
+        </mat-form-field>
+        <br>
+        <mat-form-field style="width:100%;">
+          <mat-label>Address</mat-label>
+          <textarea matInput cdkTextareaAutosize name="obs" placeHolder="Observations" [(ngModel)]="patient.address">{{patient.address}}</textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Profession</mat-label>
+          <input matInput type="text" name="profession" placeHolder="Profession" [(ngModel)]="patient.profession">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Natural From</mat-label>
+          <input matInput type="text" name="naturalFrom" placeHolder="Place of Birth" [(ngModel)]="patient.naturalFrom">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Origin</mat-label>
+          <input matInput type="text" name="origin" placeHolder="Origin" [(ngModel)]="patient.origin">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Referred By</mat-label>
+          <input matInput type="text" name="referredBy" placeHolder="Referral" [(ngModel)]="patient.referredBy">
+        </mat-form-field>
+        <br>
+        <mat-form-field style="width:100%;">
+          <mat-label>Obs</mat-label>
+          <textarea matInput cdkTextareaAutosize name="obs" placeHolder="Observations" [(ngModel)]="patient.obs">{{patient.obs}}</textarea>
+        </mat-form-field>
+      </form>
       <mat-action-row>
         <button mat-icon-button><mat-icon>delete</mat-icon></button>
       </mat-action-row>
-
     </mat-expansion-panel>
       <!-- Sensitive info are -->
     <div *ngIf="isRegisteredDoctor">
@@ -69,29 +99,49 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div *ngIf="consultation">
-          <mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>Anamnesis</mat-label>
             <textarea matInput cdkTextareaAutosize name="anamnesis" placeHolder="Anamnesis" [(ngModel)]="consultation.anamnesis">{{consultation.anamnesis}}</textarea>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>Physical</mat-label>
             <textarea matInput cdkTextareaAutosize name="physical" placeHolder="Physical" [(ngModel)]="consultation.physical">{{consultation.physical}}</textarea>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>Hypothesis</mat-label>
             <textarea matInput cdkTextareaAutosize name="hypothesis" placeHolder="Hypothesis" [(ngModel)]="consultation.hypothesis">{{consultation.hypothesis}}</textarea>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>Conduct</mat-label>
             <textarea matInput cdkTextareaAutosize name="conduct" placeHolder="Conduct" [(ngModel)]="consultation.conduct">{{consultation.conduct}}</textarea>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>Evolution</mat-label>
             <textarea matInput cdkTextareaAutosize name="evolution" placeHolder="Evolution" [(ngModel)]="consultation.evolution">{{consultation.evolution}}</textarea>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>Examination</mat-label>
             <textarea matInput cdkTextareaAutosize name="examination" placeHolder="Examination" [(ngModel)]="consultation.examination">{{consultation.examination}}</textarea>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field style="width:100%;">
+            <mat-label>Surgical Procedures</mat-label>
             <textarea matInput cdkTextareaAutosize name="surgicalProcedures" placeHolder="SurgicalProcedures" [(ngModel)]="consultation.surgical_procedures">{{consultation.surgical_procedures}}</textarea>
           </mat-form-field>
         </div>
       </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>collections</mat-icon>
+            Gallery
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-action-row>
+          <button mat-icon-button><mat-icon>add_photo_alternate</mat-icon></button>
+          <button mat-icon-button><mat-icon>delete</mat-icon></button>
+        </mat-action-row>
+      </mat-expansion-panel>
     </div>
   </mat-accordion>
 </div>
+<br><br><br>

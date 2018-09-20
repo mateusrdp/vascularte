@@ -1,16 +1,24 @@
-<mat-form-field>
-  <input matInput [matDatepicker]="picker" name="dob" placeHolder="Pick a date" [(ngModel)]="date">
-  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-  <mat-datepicker #picker></mat-datepicker>
-</mat-form-field>
-<!-- Replace this with an autocomplete -->
-<mat-form-field>
-  <input matInput type="text" name="insuranceProvider" placeHolder="Insurance Provider" [(ngModel)]="insuranceProviderName">
-</mat-form-field>
-<mat-form-field>
-  <input matInput type="text" name="amountCharged" placeHolder="Amount Charged" [(ngModel)]="amountCharged">
-</mat-form-field>
-<mat-form-field>
-  <input matInput type="text" name="receipt" placeHolder="Receipt" [(ngModel)]="receipt">
-</mat-form-field>
-<button mat-raised-button="" color="primary" (click)="submitPayment()"><mat-icon>attach_money</mat-icon>Save</button>
+<form #payFormCtrl="ngForm">
+  <mat-form-field>
+    <mat-label>Date</mat-label>
+    <input matInput [matDatepicker]="picker" name="dob" placeHolder="Pick a date" [(ngModel)]="date" required>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <!-- Replace this with an autocomplete -->
+  <mat-form-field>
+    <mat-label>Insurance Provider</mat-label>
+    <input matInput type="text" name="insuranceProvider" placeHolder="Insurance Provider" [(ngModel)]="insuranceProviderName" required>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Amount Charged</mat-label>
+    <input matInput type="text" name="amountCharged" placeHolder="Amount Charged" [(ngModel)]="amountCharged" required>
+    <span matPrefix>$&nbsp;</span>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Receipt</mat-label>
+    <input matInput type="text" name="receipt" placeHolder="Receipt" [(ngModel)]="receipt" required>
+    <span matPrefix>$&nbsp;</span>
+  </mat-form-field>
+  <button mat-raised-button="" color="primary" (click)="submitPayment()" [disabled]="payFormCtrl.invalid"><mat-icon>attach_money</mat-icon>Save</button>
+</form>
