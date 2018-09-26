@@ -1,10 +1,13 @@
 // TODO: Implement saving data
 import { Injectable, OnInit } from '@angular/core';
-import { Apollo } from 'apollo-angular';
+import {Apollo, QueryRef} from 'apollo-angular';
 import { HttpLink } from 'apollo-angular-link-http';
 import {
   AllPatientNamesResponse,
   ALL_PATIENT_NAMES,
+  PatientNameSubscriptionResponse,
+  NEW_PATIENT_NAMES,
+  DEL_PATIENT_NAMES,
   PatientDataResponse,
   PATIENT_DATA,
   ConsultationDataResponse,
@@ -15,39 +18,103 @@ import {
   AddOrRemovePaymentDataResponse,
   REMOVE_PAYMENT,
   CREATE_CONSULTATION,
-  ConsultationCreateResponse, CREATE_PATIENT, PatientCreateResponse
+  ConsultationCreateResponse,
+  CREATE_PATIENT,
+  PatientCreateResponse
 } from '../graphql/queries';
 import {IPatient} from '../interfaces/ipatient';
 import {IConsultation} from '../interfaces/iconsultation';
 import {AuthService} from '../auth/auth.service';
 import {IPayment} from '../interfaces/ipayment';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DataService implements OnInit {
 
   // TODO: implement this with GraphQL subscriptions, so the drs always have an up-to-date list of patients, as the secretary adds them
-  private _allPatientNames: string[] = [];
+  private _allPatientNames: string[];
+  private _allPatientNamesQuery: QueryRef<any>;
+  private _allPatientNamesQuerySubscription: Subscription;
 
   private _patient: IPatient = null;
   private _consultation: IConsultation = null;
   private _payments: IPayment[] = null;
 
-  private _paymentAdded = new BehaviorSubject({id: -1, login: '', date: '', insuranceProviderName: '', amountCharged: 0, receipt: 0 });
-  private _paymentRemoved = new BehaviorSubject({id: -1, login: '', date: '', insuranceProviderName: '', amountCharged: 0, receipt: 0 });
+  private _patientAdded = new BehaviorSubject({
+    id: -1,
+    name: '',
+    dob: null,
+    gender: '',
+    ethnicity: '',
+    civilStatus: '',
+    phone: '',
+    profession: '',
+    address: '',
+    naturalFrom: '',
+    origin: '',
+    referredBy: '',
+    obs: ''
+  });
 
-  ngOnInit() {}
+  private _consultationAdded = new BehaviorSubject({
+    login: this.auth.doctor ? this.auth.doctor.login : '',
+    id: -1,
+    anamnesis: '',
+    physical: '',
+    hypothesis: '',
+    conduct: '',
+    evolution: '',
+    examination: '',
+    surgical_procedures: ''
+  });
 
-  constructor(private apollo: Apollo, private httpLink: HttpLink, private auth: AuthService) { }
+  private _paymentAdded = new BehaviorSubject({
+    id: -1,
+    login: '',
+    date: '',
+    insuranceProviderName: '',
+    amountCharged: 0,
+    receipt: 0
+  });
+  private _paymentRemoved = new BehaviorSubject({
+    id: -1,
+    login: '',
+    date: '',
+    insuranceProviderName: '',
+    amountCharged: 0,
+    receipt: 0
+  });
 
-  refetchPatientNames() {
-    this.apollo.query<AllPatientNamesResponse>({ query: ALL_PATIENT_NAMES }).subscribe(result => {
-      this._allPatientNames = [];
-      for (const patient of result.data.patient) {
-        this._allPatientNames.push(patient.name);
+  constructor(private apollo: Apollo, private httpLink: HttpLink, private auth: AuthService) {
+  }
+
+  ngOnInit() { }
+
+  watchPatientNames() {
+    this._allPatientNamesQuery = this.apollo.watchQuery<AllPatientNamesResponse>({
+      query: ALL_PATIENT_NAMES
+    });
+    this._allPatientNamesQuerySubscription = this._allPatientNamesQuery.valueChanges.subscribe(({data}) => {
+      this._allPatientNames = data.patient.map(p => p.name);
+    });
+    this.subscribeToNewPatients();
+  }
+
+  subscribeToNewPatients() {
+    this._allPatientNamesQuery.subscribeToMore({
+      document: NEW_PATIENT_NAMES,
+      // variables: {},
+      updateQuery: (prev, {subscriptionData}) => {
+        if (!subscriptionData.data) {
+          return prev;
+        }
+        const myNewPatient = subscriptionData.data.newPatient;
+        this._allPatientNames.push(myNewPatient.name);
+        return {
+          ...prev,
+          patient: [myNewPatient, ...prev.patient]
+        };
       }
-    }, error => {
-      alert(error);
     });
   }
 
@@ -74,11 +141,12 @@ export class DataService implements OnInit {
   }
 
   createPatientData() {
+    const myDateString = this.patient.dob.getFullYear() + '-' + (this.patient.dob.getMonth() + 1) + '-' + this.patient.dob.getDate();
     this.apollo.mutate<PatientCreateResponse>({
       mutation: CREATE_PATIENT,
       variables: {
         name: this.patient.name,
-        dob: this.patient.dob,
+        dob: myDateString,
         gender: this.patient.gender,
         ethnicity: this.patient.ethnicity,
         civilStatus: this.patient.civilStatus,
@@ -91,11 +159,17 @@ export class DataService implements OnInit {
         obs: this.patient.obs,
       }
     }).subscribe(result => {
-      this._patient = result.data.patient;
-      this._patient.dob = new Date(result.data.patient.dob); // hack to get the date right
+      this._patient = result.data.addPatient;
+      this._patient.dob = new Date(result.data.addPatient.dob); // hack to get the date right
+      this.newConsultation();
+      this._patientAdded.next(this._patient);
     }, error => {
       alert(error);
     });
+  }
+
+  get patientAdded() {
+    return this._patientAdded.asObservable();
   }
 
   get patient() {
@@ -137,15 +211,27 @@ export class DataService implements OnInit {
   createConsultationData() {
     this.apollo.mutate<ConsultationCreateResponse>({
       mutation: CREATE_CONSULTATION,
-      variables: {name: this.patient.name}
-    }).subscribe(result => {
-      this._consultation = result.data.consultation[0];
-      if (!this._consultation) {
-        this.newConsultation();
+      variables: {
+        id: this.patient.id,
+        anamnesis: this.consultation.anamnesis,
+        physical: this.consultation.physical,
+        hypothesis: this.consultation.hypothesis,
+        conduct: this.consultation.conduct,
+        evolution: this.consultation.evolution,
+        examination: this.consultation.examination,
+        surgicalProcedures: this.consultation.surgical_procedures
+
       }
+    }).subscribe(result => {
+      this._consultation = result.data.addConsultation;
+      this._consultationAdded.next(this._consultation);
     }, error => {
       alert(error);
     });
+  }
+
+  get consultationAdded() {
+    return this._consultationAdded.asObservable();
   }
 
   loadConsultationData() {

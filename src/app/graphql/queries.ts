@@ -5,11 +5,20 @@ import {IConsultation} from '../interfaces/iconsultation';
 import {IPayment} from '../interfaces/ipayment';
 
 export const ALL_PATIENT_NAMES = gql `query AllPatientNames{ patient { name } }`;
+export const NEW_PATIENT_NAMES = gql `subscription NewPatientNames{ newPatient { name } }`;
+export const DEL_PATIENT_NAMES = gql `subscription DelPatientNames{ delPatient { name } }`;
 
 export interface AllPatientNamesResponse {
   patient: {
     name: string;
   }[];
+  loading: boolean;
+}
+
+export interface PatientNameSubscriptionResponse {
+  patient: {
+    name: string;
+  };
   loading: boolean;
 }
 

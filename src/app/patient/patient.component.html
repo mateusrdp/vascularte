@@ -28,7 +28,7 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Gender</mat-label>
-          <mat-select name="gender" placeHolder="Pick a gender" [(ngModel)]="patient.gender">
+          <mat-select name="gender" placeHolder="Pick a gender" [(ngModel)]="patient.gender" required (blur)="createPatientIfNeeded(patForm)">
             <mat-option name="genderM" value="M">Male</mat-option>
             <mat-option name="genderF" value="F">Female</mat-option>
             <mat-option name="genderO" value="O">It's complicated</mat-option>
@@ -38,10 +38,10 @@
           <mat-label>Ethnicity</mat-label>
           <input matInput type="text" name="ethnicity" placeHolder="Ethnicity" [(ngModel)]="patient.ethnicity" [matAutocomplete]="ethVal">
           <mat-autocomplete #ethVal="matAutocomplete">
-            <mat-option [value]="Caucasian">Caucasian</mat-option>
-            <mat-option [value]="Black">Black</mat-option>
-            <mat-option [value]="Brown">Brown</mat-option>
-            <mat-option [value]="Asian">Asian</mat-option>
+            <mat-option value="Caucasian">Caucasian</mat-option>
+            <mat-option value="Black">Black</mat-option>
+            <mat-option value="Brown">Brown</mat-option>
+            <mat-option value="Asian">Asian</mat-option>
           </mat-autocomplete>
         </mat-form-field>
         <mat-form-field>
@@ -49,9 +49,9 @@
           <input matInput type="text" name="civilStatus" placeHolder="Civil Status"
                  [(ngModel)]="patient.civilStatus" [matAutocomplete]="civilVal">
           <mat-autocomplete #civilVal="matAutocomplete">
-            <mat-option [value]="Single">Single</mat-option>
-            <mat-option [value]="Married">Married</mat-option>
-            <mat-option [value]="Widowed">Widowed</mat-option>
+            <mat-option value="Single">Single</mat-option>
+            <mat-option value="Married">Married</mat-option>
+            <mat-option value="Widowed">Widowed</mat-option>
           </mat-autocomplete>
         </mat-form-field>
         <mat-form-field>
@@ -61,7 +61,7 @@
         <br>
         <mat-form-field style="width:100%;">
           <mat-label>Address</mat-label>
-          <textarea matInput cdkTextareaAutosize name="obs" placeHolder="Observations" [(ngModel)]="patient.address">{{patient.address}}</textarea>
+          <textarea matInput cdkTextareaAutosize name="obs" placeHolder="Observations" [(ngModel)]="patient.address" [value]="patient.address"></textarea>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Profession</mat-label>
@@ -82,14 +82,14 @@
         <br>
         <mat-form-field style="width:100%;">
           <mat-label>Obs</mat-label>
-          <textarea matInput cdkTextareaAutosize name="obs" placeHolder="Observations" [(ngModel)]="patient.obs">{{patient.obs}}</textarea>
+          <textarea matInput cdkTextareaAutosize name="obs" placeHolder="Observations" [(ngModel)]="patient.obs" [value]="patient.obs"></textarea>
         </mat-form-field>
       </form>
       <mat-action-row>
         <button mat-icon-button><mat-icon>delete</mat-icon></button>
       </mat-action-row>
     </mat-expansion-panel>
-      <!-- Sensitive info are -->
+      <!-- Sensitive info -->
     <div *ngIf="isRegisteredDoctor">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
@@ -101,35 +101,35 @@
         <div *ngIf="consultation">
           <mat-form-field style="width:100%;">
             <mat-label>Anamnesis</mat-label>
-            <textarea matInput cdkTextareaAutosize name="anamnesis" placeHolder="Anamnesis" [(ngModel)]="consultation.anamnesis">{{consultation.anamnesis}}</textarea>
+            <textarea matInput cdkTextareaAutosize name="anamnesis" placeHolder="Anamnesis" [(ngModel)]="consultation.anamnesis" [value]="consultation.anamnesis" (blur)="createConsultationIfNeeded()"></textarea>
           </mat-form-field>
           <mat-form-field style="width:100%;">
             <mat-label>Physical</mat-label>
-            <textarea matInput cdkTextareaAutosize name="physical" placeHolder="Physical" [(ngModel)]="consultation.physical">{{consultation.physical}}</textarea>
+            <textarea matInput cdkTextareaAutosize name="physical" placeHolder="Physical" [(ngModel)]="consultation.physical" [value]="consultation.physical" (blur)="createConsultationIfNeeded()"></textarea>
           </mat-form-field>
           <mat-form-field style="width:100%;">
             <mat-label>Hypothesis</mat-label>
-            <textarea matInput cdkTextareaAutosize name="hypothesis" placeHolder="Hypothesis" [(ngModel)]="consultation.hypothesis">{{consultation.hypothesis}}</textarea>
+            <textarea matInput cdkTextareaAutosize name="hypothesis" placeHolder="Hypothesis" [(ngModel)]="consultation.hypothesis" [value]="consultation.hypothesis" (blur)="createConsultationIfNeeded()"></textarea>
           </mat-form-field>
           <mat-form-field style="width:100%;">
             <mat-label>Conduct</mat-label>
-            <textarea matInput cdkTextareaAutosize name="conduct" placeHolder="Conduct" [(ngModel)]="consultation.conduct">{{consultation.conduct}}</textarea>
+            <textarea matInput cdkTextareaAutosize name="conduct" placeHolder="Conduct" [(ngModel)]="consultation.conduct" [value]="consultation.conduct" (blur)="createConsultationIfNeeded()"></textarea>
           </mat-form-field>
           <mat-form-field style="width:100%;">
             <mat-label>Evolution</mat-label>
-            <textarea matInput cdkTextareaAutosize name="evolution" placeHolder="Evolution" [(ngModel)]="consultation.evolution">{{consultation.evolution}}</textarea>
+            <textarea matInput cdkTextareaAutosize name="evolution" placeHolder="Evolution" [(ngModel)]="consultation.evolution" [value]="consultation.evolution" (blur)="createConsultationIfNeeded()"></textarea>
           </mat-form-field>
           <mat-form-field style="width:100%;">
             <mat-label>Examination</mat-label>
-            <textarea matInput cdkTextareaAutosize name="examination" placeHolder="Examination" [(ngModel)]="consultation.examination">{{consultation.examination}}</textarea>
+            <textarea matInput cdkTextareaAutosize name="examination" placeHolder="Examination" [(ngModel)]="consultation.examination" [value]="consultation.examination" (blur)="createConsultationIfNeeded()"></textarea>
           </mat-form-field>
           <mat-form-field style="width:100%;">
             <mat-label>Surgical Procedures</mat-label>
-            <textarea matInput cdkTextareaAutosize name="surgicalProcedures" placeHolder="SurgicalProcedures" [(ngModel)]="consultation.surgical_procedures">{{consultation.surgical_procedures}}</textarea>
+            <textarea matInput cdkTextareaAutosize name="surgicalProcedures" placeHolder="SurgicalProcedures" [(ngModel)]="consultation.surgical_procedures" [value]="consultation.surgical_procedures" (blur)="createConsultationIfNeeded()"></textarea>
           </mat-form-field>
         </div>
       </mat-expansion-panel>
-      <mat-expansion-panel>
+      <mat-expansion-panel [disabled]="true">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon>collections</mat-icon>

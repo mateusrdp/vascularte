@@ -1,12 +1,20 @@
+<!--
+  This fixed position 100% wide toolbar is buggy.
+  First of all, looks like it hinders performance a LOT, for some reason.
+  Next, the first expansion pane gets hidden behind it.
+  TODO: find a better way to present the toolbar
+-->
+<!-- <mat-toolbar color="primary" class="fixed-header"> -->
+
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <!-- Login bar -->
     <div *ngIf="!isLogged">
-      <mat-form-field>
+      <mat-form-field floatLabel="never">
         <mat-icon>account_circle</mat-icon>
         <input matInput [(ngModel)]="login" type="text" name="login" placeholder="Login">
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field floatLabel="never">
         <mat-icon>vpn_key</mat-icon>
         <input matInput [(ngModel)]="password" type="password" name="password" placeholder="Password">
       </mat-form-field>
@@ -15,9 +23,9 @@
 
     <!--  Search bar -->
     <div *ngIf="isLogged">
-      <mat-form-field>
+      <mat-form-field floatLabel="never">
         <input matInput type="text" name="patientName" [matAutocomplete]="auto" placeholder="Search...">
-        <mat-icon>search</mat-icon>
+        <mat-icon (click)="showAllPatientNames()">search</mat-icon>
       </mat-form-field>
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="loadPatientData($event.option.value)">
         <mat-option *ngFor="let patientName of allPatientNames" [value]="patientName" >{{patientName}}</mat-option>

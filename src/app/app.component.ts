@@ -11,6 +11,7 @@ import { IPatient } from './interfaces/ipatient';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +36,10 @@ export class AppComponent implements OnInit {
     this.authService.autologin();
     this.authService.authenticaticonStatusChanges.subscribe(x => {
       this._isLogged = x;
-      this.data.refetchPatientNames();
+      if (x) {
+        this.data.watchPatientNames();
+        this.router.navigate(['/patient']);
+      }
     });
     this.authService.drDataAvailabilityChanges.subscribe(x => { this._hasDrData = x; });
   }
@@ -52,7 +56,7 @@ export class AppComponent implements OnInit {
     this.authService.login(this.login, this.password);
     this.authService.authenticaticonStatusChanges.subscribe(ok => {
       if (ok) {
-        this.data.refetchPatientNames();
+        this.data.watchPatientNames();
         this.router.navigate(['/patient']);
       }
     });
@@ -67,12 +71,16 @@ export class AppComponent implements OnInit {
    * Search Stuff
    */
 
-  get allPatientNames(): string[] {
+  get allPatientNames() {
     return this.data.allPatientNames;
   }
 
   loadPatientData(name: string) {
     this.data.loadPatientData(name);
+  }
+
+  showAllPatientNames() {
+    console.log(this.data.allPatientNames);
   }
 
 }

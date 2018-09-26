@@ -69,7 +69,6 @@ export class AuthService {
   }
 
   logout() {
-    console.log('logging out');
     localStorage.removeItem(__AUTH_TOKEN);
     localStorage.removeItem(__GOD_TOKEN); // Just in case
     this._authenticaticonStatusChanges.next(false);
